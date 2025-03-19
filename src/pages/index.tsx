@@ -8,6 +8,8 @@ import { InferGetServerSidePropsType } from "next";
 import fetchBooks from "@/lib/fetch-books";
 import fetchRandomBooks from "@/lib/fetch-random-books";
 
+// async는 getServerSideProps가 Promise를 반환하도록 만들기 위해 필요함.
+// async가 있어야 await을 사용할 수 있음.
 export const getServerSideProps = async () => {
   // 서버측에서 실행되는 함수. 따라서 브라우저에서 console.log해도 찍히지 않음
   //SSR(서버사이드렌더링)
@@ -18,8 +20,13 @@ export const getServerSideProps = async () => {
   // 즉, 서버에서 실행될때, window는 undefined이므로 이 undefined에서 property인 location을 사용하겠다는것이므로 에러발생
   //window.location
 
-  const allBooks = await fetchBooks();
-  const recoBooks = await fetchRandomBooks();
+  // Promise.all([...])는 여러 개의 비동기 작업을 병렬로 실행하고,
+  //  await는 모든 작업이 완료될 때까지 기다린 후 결과를 반환하는 역할
+  const [allBooks, recoBooks] = await Promise.all([
+    //Promise.all은 Promise 클래스의 정적메서드
+    fetchBooks(),
+    fetchRandomBooks(),
+  ]);
 
   return {
     props: { allBooks, recoBooks },
@@ -35,12 +42,12 @@ export default function Home({
   // 하지만 서버에서 처음 실행될때는 visual코드 콘솔창에서 찍히고, 그 후 브라우저에서는 개발자도구의 console에 찍힘
   //console.log(data);
 
-  console.log(allBooks);
-
   //아래 useEffect훅은 브라우저에서 컴포넌트가 마운트 될때 실행되므로, 서버에서 아래 useEffect는 실행되지 않음 -> 따라서 한번만 콘솔에 찍힘
   //   useEffect(() => {
   //     console.log(window);
   //   }, []);
+
+  console.log(allBooks);
 
   return (
     <div className={style.container}>
