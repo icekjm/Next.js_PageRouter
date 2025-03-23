@@ -1,16 +1,18 @@
 //CSS Module
 import SearchableLayout from "@/components/searchable-layout";
 import style from "./index.module.css";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 
 import BookItem from "@/components/book-item";
-import { InferGetServerSidePropsType } from "next";
 import fetchBooks from "@/lib/fetch-books";
 import fetchRandomBooks from "@/lib/fetch-random-books";
+import { InferGetStaticPropsType } from "next";
 
 // async는 getServerSideProps가 Promise를 반환하도록 만들기 위해 필요함.
 // async가 있어야 await을 사용할 수 있음.
-export const getServerSideProps = async () => {
+// getStaticProps로 변경(SSR => SSG로 변경)
+export const getStaticProps = async () => {
+  console.log("인덱스페이지");
   // getServerSideProps라는 특수한 이름을 추가하면, Next.js가 자동으로 서버에서 실행함
   // 서버측에서 실행되는 함수. 따라서 브라우저에서 console.log해도 찍히지 않음
   //SSR(서버사이드렌더링)
@@ -41,7 +43,7 @@ export const getServerSideProps = async () => {
 export default function Home({
   allBooks,
   recoBooks,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   //아래와 같이 콘솔을 찍어보면 2번찍히는데, 서버에서 처음 실행될때 1번 그리고
   // 나중에 서버로부터 js번들을 받게될때 브라우저에서 한번 찍혀서 총2번찍힘
   // 하지만 서버에서 처음 실행될때는 visual코드 콘솔창에서 찍히고, 그 후 브라우저에서는 개발자도구의 console에 찍힘
@@ -51,8 +53,6 @@ export default function Home({
   //   useEffect(() => {
   //     console.log(window);
   //   }, []);
-
-  console.log(allBooks);
 
   return (
     <div className={style.container}>
