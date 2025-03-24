@@ -36,6 +36,7 @@ export const getStaticProps = async () => {
 
   return {
     props: { allBooks, recoBooks }, //getServerSideProps 함수가 항상 { props: ... } 형태의 객체를 반환해야함
+    //revalidate: 3, //인덱스 페이지를 3초주기로 재검증하겠다(시간을 기반으로 한 ISR방식, 참고로 on-demand ISR도 있음)
   };
 };
 
