@@ -1,18 +1,16 @@
-//CSS Module
 import SearchableLayout from "@/components/searchable-layout";
 import style from "./index.module.css";
 import { ReactNode } from "react";
-
 import BookItem from "@/components/book-item";
 import fetchBooks from "@/lib/fetch-books";
 import fetchRandomBooks from "@/lib/fetch-random-books";
 import { InferGetStaticPropsType } from "next";
+import Head from "next/head";
 
 // async는 getServerSideProps가 Promise를 반환하도록 만들기 위해 필요함.
 // async가 있어야 await을 사용할 수 있음.
 // getStaticProps로 변경(SSR => SSG로 변경)
 export const getStaticProps = async () => {
-  console.log("인덱스페이지");
   // getServerSideProps라는 특수한 이름을 추가하면, Next.js가 자동으로 서버에서 실행함
   // 서버측에서 실행되는 함수. 따라서 브라우저에서 console.log해도 찍히지 않음
   //SSR(서버사이드렌더링)
@@ -56,21 +54,32 @@ export default function Home({
   //   }, []);
 
   return (
-    <div className={style.container}>
-      <section>
-        <h3>지금 추천하는 도서</h3>
-        {recoBooks.map((book) => (
-          <BookItem key={book.id} {...book} />
-        ))}
-      </section>
-      <section>
-        {" "}
-        <h3>등록된 모든 도서</h3>
-        {allBooks.map((book) => (
-          <BookItem key={book.id} {...book} />
-        ))}
-      </section>
-    </div>
+    <>
+      <Head>
+        <title>한입북스</title>
+        <meta property="og:image" content="/thumbnail.png" />
+        <meta property="og:title" content="한입북스" />
+        <meta
+          property="og:description"
+          content="한입 북스에 등록된 도서들을 만나보세요"
+        />
+      </Head>
+      <div className={style.container}>
+        <section>
+          <h3>지금 추천하는 도서</h3>
+          {recoBooks.map((book) => (
+            <BookItem key={book.id} {...book} />
+          ))}
+        </section>
+        <section>
+          {" "}
+          <h3>등록된 모든 도서</h3>
+          {allBooks.map((book) => (
+            <BookItem key={book.id} {...book} />
+          ))}
+        </section>
+      </div>
+    </>
   );
 }
 
